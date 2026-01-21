@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import Swal from 'sweetalert2';
 import {
   FaHome, FaBook, FaUsers, FaUserGraduate, FaClipboardList,
   FaChartBar, FaCog, FaKey, FaSignOutAlt, FaBars, FaTimes
@@ -20,9 +21,21 @@ const Sidebar = ({ activeItem, isCollapsed, setIsCollapsed }) => {
   ];
 
   const handleLogout = () => {
-    localStorage.removeItem('user');
-    toast.success('Logged out successfully');
-    navigate('/');
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'You will be logged out of the system',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, logout!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        localStorage.removeItem('user');
+        toast.success('Logged out successfully');
+        navigate('/');
+      }
+    });
   };
 
   const handleChangePassword = () => {

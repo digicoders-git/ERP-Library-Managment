@@ -5,12 +5,15 @@
   0% {
     transform: translate(0px, 0px) scale(1);
   }
+
   33% {
     transform: translate(30px, -50px) scale(1.1);
   }
+
   66% {
     transform: translate(-20px, 20px) scale(0.9);
   }
+
   100% {
     transform: translate(0px, 0px) scale(1);
   }
@@ -28,9 +31,9 @@
   animation-delay: 4s;
 }
 
-/* Smooth transitions */
-* {
-  transition: all 0.3s ease;
+/* Smooth transitions for specific properties */
+.transition-layout {
+  transition: margin 0.3s ease, width 0.3s ease, padding 0.3s ease;
 }
 
 /* Custom scrollbar */
@@ -63,10 +66,194 @@
   transform: scale(1.05);
 }
 
+/* Theme and Font Variables */
+:root {
+  --bg-primary: #f3f4f6;
+  --bg-secondary: #ffffff;
+  --text-primary: #1f2937;
+  --text-secondary: #4b5563;
+  --card-bg: #ffffff;
+  --card-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  --sidebar-bg: #111827;
+  --accent-color: #3b82f6;
+}
+
+body.theme-light {
+  --bg-primary: #f3f4f6;
+  --bg-secondary: #ffffff;
+  --text-primary: #1f2937;
+  --text-secondary: #4b5563;
+  --card-bg: #ffffff;
+  --sidebar-bg: #111827;
+}
+
+body.theme-dark {
+  --bg-primary: #0f172a;
+  --bg-secondary: #1e293b;
+  --text-primary: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --card-bg: #1e293b;
+  --sidebar-bg: #0f172a;
+}
+
+body.theme-cool {
+  --bg-primary: #f0f9ff;
+  --bg-secondary: #e0f2fe;
+  --text-primary: #0369a1;
+  --text-secondary: #075985;
+  --card-bg: #f0f9ff;
+  --sidebar-bg: #0c4a6e;
+}
+
+body.theme-warm {
+  --bg-primary: #fff7ed;
+  --bg-secondary: #ffedd5;
+  --text-primary: #9a3412;
+  --text-secondary: #c2410c;
+  --card-bg: #fff7ed;
+  --sidebar-bg: #7c2d12;
+}
+
+/* Global Theme Styles & Overrides */
+/* This ensures that when a theme class is present on body, all common Tailwind classes are overridden */
+
+/* Primary backgrounds and text for any theme */
+.theme-light,
+.theme-dark,
+.theme-cool,
+.theme-warm {
+  background-color: var(--bg-primary) !important;
+  color: var(--text-primary) !important;
+  transition: all 0.3s ease;
+}
+
+/* Override White Backgrounds (Cards) */
+.theme-light .bg-white,
+.theme-dark .bg-white,
+.theme-cool .bg-white,
+.theme-warm .bg-white,
+.theme-light .bg-white\/80,
+.theme-dark .bg-white\/80,
+.theme-cool .bg-white\/80,
+.theme-warm .bg-white\/80 {
+  background-color: var(--card-bg) !important;
+}
+
+/* Override Light Gray Backgrounds (Page backgrounds, tables) */
+.theme-light .bg-gray-50,
+.theme-dark .bg-gray-50,
+.theme-cool .bg-gray-50,
+.theme-warm .bg-gray-50,
+.theme-light .bg-gray-100,
+.theme-dark .bg-gray-100,
+.theme-cool .bg-gray-100,
+.theme-warm .bg-gray-100 {
+  background-color: var(--bg-primary) !important;
+}
+
+/* Override Text Colors */
+.theme-light .text-gray-900,
+.theme-dark .text-gray-900,
+.theme-cool .text-gray-900,
+.theme-warm .text-gray-900,
+.theme-light .text-gray-800,
+.theme-dark .text-gray-800,
+.theme-cool .text-gray-800,
+.theme-warm .text-gray-800,
+.theme-light .text-gray-700,
+.theme-dark .text-gray-700,
+.theme-cool .text-gray-700,
+.theme-warm .text-gray-700 {
+  color: var(--text-primary) !important;
+}
+
+.theme-light .text-gray-600,
+.theme-dark .text-gray-600,
+.theme-cool .text-gray-600,
+.theme-warm .text-gray-600,
+.theme-light .text-gray-500,
+.theme-dark .text-gray-500,
+.theme-cool .text-gray-500,
+.theme-warm .text-gray-500 {
+  color: var(--text-secondary) !important;
+}
+
+/* Sidebar Override */
+.theme-light .bg-gray-900,
+.theme-dark .bg-gray-900,
+.theme-cool .bg-gray-900,
+.theme-warm .bg-gray-900 {
+  background-color: var(--sidebar-bg) !important;
+}
+
+/* Border Overrides */
+.theme-light .border,
+.theme-dark .border,
+.theme-cool .border,
+.theme-warm .border,
+.theme-light .border-gray-100,
+.theme-dark .border-gray-100,
+.theme-cool .border-gray-100,
+.theme-warm .border-gray-100,
+.theme-light .border-gray-200,
+.theme-dark .border-gray-200,
+.theme-cool .border-gray-200,
+.theme-warm .border-gray-200 {
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Specific component fixes */
+body.theme-dark .bg-theme-secondary,
+body.theme-dark .bg-white {
+  background-color: #1e293b !important;
+}
+
+body.theme-dark .bg-theme-primary,
+body.theme-dark .bg-gray-100 {
+  background-color: #0f172a !important;
+}
+
+/* Font Families */
+body.font-sans {
+  font-family: ui-sans-serif, system-ui, -apple-system, sans-serif;
+}
+
+body.font-serif {
+  font-family: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+}
+
+body.font-mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+body.font-poppins {
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Apply Theme Variables to common elements */
+.bg-theme-primary {
+  background-color: var(--bg-primary) !important;
+}
+
+.bg-theme-secondary {
+  background-color: var(--bg-secondary) !important;
+}
+
+.text-theme-primary {
+  color: var(--text-primary) !important;
+}
+
+.text-theme-secondary {
+  color: var(--text-secondary) !important;
+}
+
+/* Transition for theme switching */
+body {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
 /* Focus states */
 .focus-ring:focus {
   outline: none;
-  ring: 2px;
-  ring-color: #3b82f6;
-  ring-offset: 2px;
+  box-shadow: 0 0 0 2px #fff, 0 0 0 4px #3b82f6;
 }

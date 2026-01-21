@@ -1,45 +1,35 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { Outlet, useLocation } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import Navbar from '../components/Navbar';
-import Dashboard from '../pages/Dashboard';
-import Books from '../pages/Books';
-import BookTransactions from '../pages/BookTransactions';
-import Members from '../pages/Members';
-import Students from '../pages/Students';
-import { Reports, Settings } from '../pages/OtherPages';
 
 const DashboardLayout = () => {
-  const [activeItem, setActiveItem] = useState('dashboard');
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const location = useLocation();
 
-  const renderContent = () => {
-    switch (activeItem) {
-      case 'dashboard':
-        return <Dashboard />;
-      case 'books':
-        return <Books />;
-      case 'book-transactions':
-        return <BookTransactions />;
-      case 'members':
-        return <Members />;
-      case 'students':
-        return <Students />;
-      case 'reports':
-        return <Reports />;
-      case 'settings':
-        return <Settings />;
-      default:
-        return <Dashboard />;
+  useEffect(() => {
+    const savedSettings = localStorage.getItem('appSettings');
+    if (savedSettings) {
+      const { theme, font } = JSON.parse(savedSettings);
+      document.body.className = `theme-${theme} font-${font}`;
     }
+  }, []);
+
+  // Get active item from current path
+  const getActiveItem = () => {
+    const path = location.pathname.replace('/dashboard/', '').replace('/dashboard', '');
+    return path || 'dashboard';
   };
 
   return (
-    <div className="bg-gray-100 min-h-screen">
-      <Sidebar activeItem={activeItem} setActiveItem={setActiveItem} isCollapsed={isCollapsed} setIsCollapsed={setIsCollapsed} />
-      <Navbar isCollapsed={isCollapsed} />
-      <main className="overflow-y-auto" style={{marginLeft: isCollapsed ? '64px' : '256px', marginTop: '80px', minHeight: 'calc(100vh - 80px)'}}>
-        {renderContent()}
-      </main>
+    <div className="bg-theme-primary h-screen overflow-hidden transition-colors duration-500">
+      <Sidebar activeItem={getActiveItem()} isCollapsed={isCollapsed} setIsCollapsed={setIsCollapsed} />
+      <div className="flex flex-col h-screen transition-all duration-300" style={{ marginLeft: isCollapsed ? '64px' : '256px' }}>
+        <Navbar isCollapsed={isCollapsed} />
+        <main className="flex-1 overflow-y-auto mt-20 p-6">
+          <Outlet />
+        </main>
+      </div>
     </div>
   );
 };

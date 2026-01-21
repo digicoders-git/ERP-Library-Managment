@@ -31,15 +31,15 @@ const Navbar = ({ isCollapsed }) => {
   };
 
   return (
-    <nav className="bg-white shadow-lg border-b border-gray-200 px-6 py-4 fixed top-0 right-0 left-0 z-40" style={{marginLeft: isCollapsed ? '64px' : '256px'}}>
+    <nav className="bg-theme-secondary shadow-lg border-b border-gray-200 px-6 py-4 fixed top-0 right-0 left-0 z-40 transition-colors duration-500" style={{ marginLeft: isCollapsed ? '64px' : '256px' }}>
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-3">
-          <div className="flex items-center justify-center w-10 h-10 bg-blue-600 rounded-lg">
+          <div className="flex items-center justify-center w-10 h-10 bg-blue-600 rounded-lg shadow-md">
             <FaBookOpen className="text-white text-lg" />
           </div>
           <div>
-            <h1 className="text-xl font-bold text-gray-800">Library Management System</h1>
-            <p className="text-sm text-gray-600">Digital Library Solutions</p>
+            <h1 className="text-xl font-bold text-theme-primary">Library Management System</h1>
+            <p className="text-sm text-theme-secondary">Digital Library Solutions</p>
           </div>
         </div>
 
@@ -48,19 +48,19 @@ const Navbar = ({ isCollapsed }) => {
             <div className="text-lg font-bold text-blue-600">
               {formatTime(currentTime)}
             </div>
-            <div className="text-sm font-medium text-gray-800">
+            <div className="text-sm font-medium text-theme-primary">
               {formatDate(currentTime)}
             </div>
-            
+
           </div>
 
-          <div className="flex items-center space-x-3 bg-gray-50 rounded-lg px-4 py-2">
-            <div className="flex items-center justify-center w-8 h-8 bg-blue-600 rounded-full">
+          <div className="flex items-center space-x-3 bg-gray-50/10 rounded-lg px-4 py-2 border border-gray-200/20 shadow-sm">
+            <div className="flex items-center justify-center w-8 h-8 bg-blue-600 rounded-full shadow-sm">
               <FaUser className="text-white text-sm" />
             </div>
             <div>
-              <div className="text-sm font-medium text-gray-800">{user.id || 'Admin'}</div>
-              <div className="text-xs text-gray-600">{user.role || 'Administrator'}</div>
+              <div className="text-sm font-medium text-theme-primary">{user.id || 'Admin'}</div>
+              <div className="text-xs text-theme-secondary">{user.role || 'Administrator'}</div>
             </div>
           </div>
         </div>

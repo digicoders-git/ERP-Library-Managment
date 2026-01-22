@@ -9,12 +9,6 @@ const DashboardLayout = () => {
   const location = useLocation();
 
   useEffect(() => {
-    const savedSettings = localStorage.getItem('appSettings');
-    if (savedSettings) {
-      const { theme, font } = JSON.parse(savedSettings);
-      document.body.className = `theme-${theme} font-${font}`;
-    }
-    
     // Simulate loading time
     const timer = setTimeout(() => {
       setIsLoading(false);
@@ -30,7 +24,7 @@ const DashboardLayout = () => {
   };
 
   return (
-    <div className="bg-theme-primary h-screen overflow-hidden transition-colors duration-500">
+    <div className="bg-gray-50 h-screen overflow-hidden">
       <Sidebar activeItem={getActiveItem()} isCollapsed={isCollapsed} setIsCollapsed={setIsCollapsed} />
       <div className="flex flex-col h-screen transition-all duration-300" style={{ marginLeft: isCollapsed ? '64px' : '256px' }}>
         <Navbar isCollapsed={isCollapsed} />

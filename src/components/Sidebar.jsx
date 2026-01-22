@@ -39,7 +39,7 @@ const Sidebar = ({ activeItem, isCollapsed, setIsCollapsed }) => {
   };
 
   const handleChangePassword = () => {
-    toast.info('Change password functionality would be implemented here');
+    navigate('/dashboard/change-password');
   };
 
   const handleNavigation = (path) => {
@@ -47,13 +47,13 @@ const Sidebar = ({ activeItem, isCollapsed, setIsCollapsed }) => {
   };
 
   return (
-    <div className={`bg-gray-900 text-white min-h-screen fixed left-0 top-0 transition-all duration-300 ${isCollapsed ? 'w-16' : 'w-64'} flex flex-col z-50 border-r border-gray-200/10`}>
+    <div className={`bg-gray-900 text-gray-100 min-h-screen fixed left-0 top-0 transition-all duration-300 ${isCollapsed ? 'w-16' : 'w-64'} flex flex-col z-50 border-r border-gray-700 shadow-lg`}>
       <div className="p-4 border-b border-gray-700">
         <div className="flex items-center justify-between">
-          {!isCollapsed && <h2 className="text-xl font-bold">Library System</h2>}
+          {!isCollapsed && <h2 className="text-xl font-bold text-white">Library System</h2>}
           <button
             onClick={() => setIsCollapsed(!isCollapsed)}
-            className="p-2 rounded-lg hover:bg-gray-700 cursor-pointer"
+            className="p-2 rounded-lg hover:bg-gray-800 cursor-pointer text-gray-300"
           >
             {isCollapsed ? <FaBars /> : <FaTimes />}
           </button>
@@ -70,7 +70,7 @@ const Sidebar = ({ activeItem, isCollapsed, setIsCollapsed }) => {
                   onClick={() => handleNavigation(item.path)}
                   className={`w-full flex items-center p-3 rounded-lg transition-colors cursor-pointer ${activeItem === item.id
                     ? 'bg-blue-600 text-white'
-                    : 'hover:bg-gray-700'
+                    : 'hover:bg-gray-800 text-gray-300'
                     }`}
                 >
                   <Icon className={`${isCollapsed ? 'text-3xl' : 'text-lg'}`} />
@@ -85,14 +85,14 @@ const Sidebar = ({ activeItem, isCollapsed, setIsCollapsed }) => {
       <div className="p-4 border-t border-gray-700">
         <button
           onClick={handleChangePassword}
-          className="w-full flex items-center p-3 rounded-lg hover:bg-gray-700 mb-2 cursor-pointer"
+          className="w-full flex items-center p-3 rounded-lg hover:bg-gray-800 mb-2 cursor-pointer text-gray-300"
         >
           <FaKey className={`${isCollapsed ? 'text-3xl' : 'text-lg'}`} />
           {!isCollapsed && <span className="ml-3">Change Password</span>}
         </button>
         <button
           onClick={handleLogout}
-          className="w-full flex items-center p-3 rounded-lg hover:bg-red-600 text-red-400 hover:text-white cursor-pointer"
+          className="w-full flex items-center p-3 rounded-lg hover:bg-red-900 text-red-400 hover:text-red-300 cursor-pointer"
         >
           <FaSignOutAlt className={`${isCollapsed ? 'text-3xl' : 'text-lg'}`} />
           {!isCollapsed && <span className="ml-3">Logout</span>}

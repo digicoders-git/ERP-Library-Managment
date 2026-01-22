@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { FaPlus, FaEdit, FaTrash, FaSearch, FaBook, FaHistory, FaEye, FaTimes, FaChevronLeft, FaChevronRight, FaBarcode, FaQrcode, FaCalculator } from 'react-icons/fa';
-import { toast } from 'react-toastify';
+import toast, { Toaster } from 'react-hot-toast';
 import Swal from 'sweetalert2';
+import { Tooltip } from 'react-tooltip';
 
 const Books = () => {
   const [books, setBooks] = useState([
@@ -318,14 +319,18 @@ const Books = () => {
         <div className="flex space-x-3">
           <button 
             onClick={() => setShowCatalogModal(true)}
-            className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg flex items-center"
+            className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg flex items-center transition-colors"
+            data-tooltip-id="catalog-tooltip"
+            data-tooltip-content="View complete book catalog with advanced filters"
           >
             <FaEye className="mr-2" />
             View Catalog
           </button>
           <button 
             onClick={handleAddBook}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center cursor-pointer"
+            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center cursor-pointer transition-colors"
+            data-tooltip-id="add-tooltip"
+            data-tooltip-content="Add new book to library catalog with barcode/RFID"
           >
             <FaPlus className="mr-2" />
             Add New Book
@@ -337,7 +342,11 @@ const Books = () => {
         <div className="p-6 border-b border-gray-200">
           <div className="flex flex-col md:flex-row gap-4">
             <div className="relative flex-1">
-              <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+              <FaSearch 
+                className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" 
+                data-tooltip-id="search-tooltip"
+                data-tooltip-content="Search by title, author, ISBN, barcode, or RFID tag"
+              />
               <input
                 type="text"
                 placeholder="Search by title, author, ISBN, barcode, or RFID..."
@@ -350,6 +359,8 @@ const Books = () => {
               value={filterCategory}
               onChange={(e) => setFilterCategory(e.target.value)}
               className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              data-tooltip-id="filter-tooltip"
+              data-tooltip-content="Filter books by category"
             >
               {categories.map(cat => (
                 <option key={cat} value={cat}>{cat}</option>
@@ -359,6 +370,8 @@ const Books = () => {
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
               className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              data-tooltip-id="sort-tooltip"
+              data-tooltip-content="Sort books by different criteria"
             >
               <option value="title">Sort by Title</option>
               <option value="author">Sort by Author</option>
@@ -401,11 +414,19 @@ const Books = () => {
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                     <div className="flex flex-col space-y-1">
                       <div className="flex items-center">
-                        <FaBarcode className="text-gray-400 mr-2" />
+                        <FaBarcode 
+                          className="text-gray-400 mr-2" 
+                          data-tooltip-id="barcode-tooltip"
+                          data-tooltip-content="Barcode for scanning and tracking"
+                        />
                         <span className="text-xs">{book.barcode}</span>
                       </div>
                       <div className="flex items-center">
-                        <FaQrcode className="text-gray-400 mr-2" />
+                        <FaQrcode 
+                          className="text-gray-400 mr-2" 
+                          data-tooltip-id="rfid-tooltip"
+                          data-tooltip-content="RFID tag for contactless tracking"
+                        />
                         <span className="text-xs">{book.rfidTag}</span>
                       </div>
                     </div>
@@ -437,22 +458,25 @@ const Books = () => {
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                     <button 
                       onClick={() => showBookHistory(book)}
-                      className="text-purple-600 hover:text-purple-900 mr-3 cursor-pointer"
-                      title="View History"
+                      className="text-purple-600 hover:text-purple-900 mr-3 cursor-pointer transition-colors"
+                      data-tooltip-id="history-tooltip"
+                      data-tooltip-content="View transaction history and book details"
                     >
                       <FaHistory />
                     </button>
                     <button 
                       onClick={() => handleEditBook(book)}
-                      className="text-blue-600 hover:text-blue-900 mr-3 cursor-pointer"
-                      title="Edit Book"
+                      className="text-blue-600 hover:text-blue-900 mr-3 cursor-pointer transition-colors"
+                      data-tooltip-id="edit-tooltip"
+                      data-tooltip-content="Edit book information and details"
                     >
                       <FaEdit />
                     </button>
                     <button 
                       onClick={() => handleDeleteBook(book.id)}
-                      className="text-red-600 hover:text-red-900 cursor-pointer"
-                      title="Delete Book"
+                      className="text-red-600 hover:text-red-900 cursor-pointer transition-colors"
+                      data-tooltip-id="delete-tooltip"
+                      data-tooltip-content="Delete book from catalog (cannot be undone)"
                     >
                       <FaTrash />
                     </button>
@@ -475,6 +499,8 @@ const Books = () => {
                   onClick={() => handlePageChange(currentPage - 1)}
                   disabled={currentPage === 1}
                   className="px-3 py-1 rounded-md border border-gray-300 text-sm font-medium text-gray-500 hover:text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                  data-tooltip-id="prev-tooltip"
+                  data-tooltip-content="Go to previous page"
                 >
                   <FaChevronLeft />
                 </button>
@@ -495,6 +521,8 @@ const Books = () => {
                   onClick={() => handlePageChange(currentPage + 1)}
                   disabled={currentPage === totalPages}
                   className="px-3 py-1 rounded-md border border-gray-300 text-sm font-medium text-gray-500 hover:text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                  data-tooltip-id="next-tooltip"
+                  data-tooltip-content="Go to next page"
                 >
                   <FaChevronRight />
                 </button>
@@ -506,7 +534,7 @@ const Books = () => {
 
       {/* Book History Modal */}
       {showHistory && selectedBook && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="fixed inset-0 backdrop-blur-md bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-xl shadow-2xl max-w-4xl w-full mx-4 max-h-[90vh] overflow-hidden">
             <div className="p-6 border-b border-gray-200">
               <div className="flex justify-between items-center">
@@ -516,7 +544,9 @@ const Books = () => {
                 </div>
                 <button 
                   onClick={() => setShowHistory(false)}
-                  className="text-gray-400 hover:text-gray-600 cursor-pointer"
+                  className="text-gray-400 hover:text-gray-600 cursor-pointer transition-colors"
+                  data-tooltip-id="close-tooltip"
+                  data-tooltip-content="Close history modal"
                 >
                   <FaTimes />
                 </button>
@@ -577,7 +607,7 @@ const Books = () => {
 
       {/* Add Book Modal */}
       {showAddModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="fixed inset-0 backdrop  -blur-md bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-xl shadow-2xl max-w-md w-full mx-4">
             <div className="p-6 border-b border-gray-200">
               <div className="flex justify-between items-center">
@@ -766,6 +796,37 @@ const Books = () => {
           </div>
         </div>
       )}
+      {/* Tooltips */}
+      <Tooltip id="history-tooltip" place="top" style={{ backgroundColor: '#6B46C1', color: 'white', fontSize: '11px', padding: '4px 8px', borderRadius: '4px' }} />
+      <Tooltip id="edit-tooltip" place="top" style={{ backgroundColor: '#2563EB', color: 'white', fontSize: '11px', padding: '4px 8px', borderRadius: '4px' }} />
+      <Tooltip id="delete-tooltip" place="top" style={{ backgroundColor: '#DC2626', color: 'white', fontSize: '11px', padding: '4px 8px', borderRadius: '4px' }} />
+      <Tooltip id="catalog-tooltip" place="top" style={{ backgroundColor: '#7C3AED', color: 'white', fontSize: '11px', padding: '4px 8px', borderRadius: '4px' }} />
+      <Tooltip id="add-tooltip" place="top" style={{ backgroundColor: '#2563EB', color: 'white', fontSize: '11px', padding: '4px 8px', borderRadius: '4px' }} />
+      <Tooltip id="search-tooltip" place="top" style={{ backgroundColor: '#374151', color: 'white', fontSize: '11px', padding: '4px 8px', borderRadius: '4px' }} />
+      <Tooltip id="filter-tooltip" place="top" style={{ backgroundColor: '#059669', color: 'white', fontSize: '11px', padding: '4px 8px', borderRadius: '4px' }} />
+      <Tooltip id="sort-tooltip" place="top" style={{ backgroundColor: '#0891B2', color: 'white', fontSize: '11px', padding: '4px 8px', borderRadius: '4px' }} />
+      <Tooltip id="barcode-tooltip" place="top" style={{ backgroundColor: '#6B7280', color: 'white', fontSize: '11px', padding: '4px 8px', borderRadius: '4px' }} />
+      <Tooltip id="rfid-tooltip" place="top" style={{ backgroundColor: '#6B7280', color: 'white', fontSize: '11px', padding: '4px 8px', borderRadius: '4px' }} />
+      <Tooltip id="prev-tooltip" place="top" style={{ backgroundColor: '#374151', color: 'white', fontSize: '11px', padding: '4px 8px', borderRadius: '4px' }} />
+      <Tooltip id="next-tooltip" place="top" style={{ backgroundColor: '#374151', color: 'white', fontSize: '11px', padding: '4px 8px', borderRadius: '4px' }} />
+      <Tooltip id="close-tooltip" place="top" style={{ backgroundColor: '#6B7280', color: 'white', fontSize: '11px', padding: '4px 8px', borderRadius: '4px' }} />
+
+      <Toaster 
+        position="top-right"
+        toastOptions={{
+          duration: 3000,
+          style: {
+            background: '#363636',
+            color: '#fff',
+          },
+          success: {
+            duration: 3000,
+            theme: {
+              primary: '#4aed88',
+            },
+          },
+        }}
+      />
     </div>
   );
 };

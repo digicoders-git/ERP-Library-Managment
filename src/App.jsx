@@ -8,7 +8,9 @@ import Books from './pages/Books';
 import BookTransactions from './pages/BookTransactions';
 import Members from './pages/Members';
 import Students from './pages/Students';
+import ExamManagement from './pages/ExamManagement';
 import { Reports, Settings } from './pages/OtherPages';
+import ChangePassword from './pages/ChangePassword';
 import { useState, useEffect } from 'react';
 
 function AppContent() {
@@ -60,7 +62,9 @@ function AppContent() {
           <Route path="book-transactions" element={<BookTransactions />} />
           <Route path="members" element={<Members />} />
           <Route path="students" element={<Students />} />
+          <Route path="exam-management" element={<ExamManagement />} />
           <Route path="reports" element={<Reports />} />
+          <Route path="change-password" element={<ChangePassword />} />
         </Route>
       </Routes>
       

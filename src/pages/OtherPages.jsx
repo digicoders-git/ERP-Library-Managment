@@ -315,68 +315,68 @@ export const Reports = () => {
   const renderExecutiveReport = () => (
     <div className="space-y-6">
       {/* KPI Cards with enhanced animations */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="bg-gradient-to-br from-blue-500 via-blue-600 to-blue-700 p-6 rounded-2xl text-white shadow-2xl hover:shadow-blue-500/25 transition-all duration-300 hover:scale-105 relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-16 translate-x-16"></div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+        <div className="bg-gradient-to-br from-blue-500 via-blue-600 to-blue-700 p-3 sm:p-4 lg:p-6 rounded-2xl text-white shadow-2xl hover:shadow-blue-500/25 transition-all duration-300 hover:scale-105 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-24 h-24 sm:w-32 sm:h-32 bg-white/10 rounded-full -translate-y-12 sm:-translate-y-16 translate-x-12 sm:translate-x-16"></div>
           <div className="relative z-10">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-blue-100 text-sm font-medium">Total Collection</p>
-                <p className="text-4xl font-bold mt-2 animate-pulse">{reportData.executive.totalBooks.toLocaleString()}</p>
+                <p className="text-blue-100 text-xs sm:text-sm font-medium">Total Collection</p>
+                <p className="text-2xl sm:text-3xl lg:text-4xl font-bold mt-1 sm:mt-2 animate-pulse">{reportData.executive.totalBooks.toLocaleString()}</p>
                 <p className="text-blue-100 text-xs mt-1 flex items-center"><FaBook className="mr-1" /> Books in catalog</p>
               </div>
-              <div className="bg-white/20 p-4 rounded-full backdrop-blur-sm">
-                <FaBook className="text-3xl text-white" />
+              <div className="bg-white/20 p-2 sm:p-3 lg:p-4 rounded-full backdrop-blur-sm">
+                <FaBook className="text-lg sm:text-2xl lg:text-3xl text-white" />
               </div>
             </div>
           </div>
         </div>
 
-        <div className="bg-gradient-to-br from-emerald-500 via-green-600 to-teal-700 p-6 rounded-2xl text-white shadow-2xl hover:shadow-emerald-500/25 transition-all duration-300 hover:scale-105 relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-16 translate-x-16"></div>
+        <div className="bg-gradient-to-br from-emerald-500 via-green-600 to-teal-700 p-3 sm:p-4 lg:p-6 rounded-2xl text-white shadow-2xl hover:shadow-emerald-500/25 transition-all duration-300 hover:scale-105 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-24 h-24 sm:w-32 sm:h-32 bg-white/10 rounded-full -translate-y-12 sm:-translate-y-16 translate-x-12 sm:translate-x-16"></div>
           <div className="relative z-10">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-green-100 text-sm font-medium">Active Members</p>
-                <p className="text-4xl font-bold mt-2">{reportData.executive.totalMembers.toLocaleString()}</p>
+                <p className="text-green-100 text-xs sm:text-sm font-medium">Active Members</p>
+                <p className="text-2xl sm:text-3xl lg:text-4xl font-bold mt-1 sm:mt-2">{reportData.executive.totalMembers.toLocaleString()}</p>
                 <p className="text-green-100 text-xs mt-1 flex items-center">
                   <FaArrowUp className="mr-1 animate-bounce" /> +{reportData.executive.membershipGrowth}% growth <FaArrowUp className="ml-1" />
                 </p>
               </div>
-              <div className="bg-white/20 p-4 rounded-full backdrop-blur-sm">
-                <FaUsers className="text-3xl text-white" />
+              <div className="bg-white/20 p-2 sm:p-3 lg:p-4 rounded-full backdrop-blur-sm">
+                <FaUsers className="text-lg sm:text-2xl lg:text-3xl text-white" />
               </div>
             </div>
           </div>
         </div>
 
-        <div className="bg-gradient-to-br from-purple-500 via-violet-600 to-indigo-700 p-6 rounded-2xl text-white shadow-2xl hover:shadow-purple-500/25 transition-all duration-300 hover:scale-105 relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-16 translate-x-16"></div>
+        <div className="bg-gradient-to-br from-purple-500 via-violet-600 to-indigo-700 p-3 sm:p-4 lg:p-6 rounded-2xl text-white shadow-2xl hover:shadow-purple-500/25 transition-all duration-300 hover:scale-105 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-24 h-24 sm:w-32 sm:h-32 bg-white/10 rounded-full -translate-y-12 sm:-translate-y-16 translate-x-12 sm:translate-x-16"></div>
           <div className="relative z-10">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-purple-100 text-sm font-medium">Revenue Generated</p>
-                <p className="text-4xl font-bold mt-2">₹{reportData.executive.revenueGenerated.toLocaleString()}</p>
+                <p className="text-purple-100 text-xs sm:text-sm font-medium">Revenue Generated</p>
+                <p className="text-2xl sm:text-3xl lg:text-4xl font-bold mt-1 sm:mt-2">₹{reportData.executive.revenueGenerated.toLocaleString()}</p>
                 <p className="text-purple-100 text-xs mt-1 flex items-center"><FaMoneyBillWave className="mr-1" /> This fiscal year</p>
               </div>
-              <div className="bg-white/20 p-4 rounded-full backdrop-blur-sm">
-                <FaMoneyBillWave className="text-3xl text-white" />
+              <div className="bg-white/20 p-2 sm:p-3 lg:p-4 rounded-full backdrop-blur-sm">
+                <FaMoneyBillWave className="text-lg sm:text-2xl lg:text-3xl text-white" />
               </div>
             </div>
           </div>
         </div>
 
-        <div className="bg-gradient-to-br from-orange-500 via-amber-600 to-yellow-600 p-6 rounded-2xl text-white shadow-2xl hover:shadow-orange-500/25 transition-all duration-300 hover:scale-105 relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-16 translate-x-16"></div>
+        <div className="bg-gradient-to-br from-orange-500 via-amber-600 to-yellow-600 p-3 sm:p-4 lg:p-6 rounded-2xl text-white shadow-2xl hover:shadow-orange-500/25 transition-all duration-300 hover:scale-105 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-24 h-24 sm:w-32 sm:h-32 bg-white/10 rounded-full -translate-y-12 sm:-translate-y-16 translate-x-12 sm:translate-x-16"></div>
           <div className="relative z-10">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-orange-100 text-sm font-medium">Utilization Rate</p>
-                <p className="text-4xl font-bold mt-2">{reportData.executive.bookUtilization}%</p>
+                <p className="text-orange-100 text-xs sm:text-sm font-medium">Utilization Rate</p>
+                <p className="text-2xl sm:text-3xl lg:text-4xl font-bold mt-1 sm:mt-2">{reportData.executive.bookUtilization}%</p>
                 <p className="text-orange-100 text-xs mt-1 flex items-center"><FaChartBar className="mr-1" /> Operational efficiency</p>
               </div>
-              <div className="bg-white/20 p-4 rounded-full backdrop-blur-sm">
-                <FaChartBar className="text-3xl text-white" />
+              <div className="bg-white/20 p-2 sm:p-3 lg:p-4 rounded-full backdrop-blur-sm">
+                <FaChartBar className="text-lg sm:text-2xl lg:text-3xl text-white" />
               </div>
             </div>
           </div>
@@ -384,7 +384,7 @@ export const Reports = () => {
       </div>
 
       {/* Enhanced Charts Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
         <div className="bg-theme-secondary backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/10 hover:shadow-2xl transition-all duration-300">
           <div className="p-2">
             <DonutChart
@@ -392,7 +392,7 @@ export const Reports = () => {
                 name: item.category,
                 y: item.issues
               }))}
-              title={<div className="flex items-center justify-center py-4 font-bold text-theme-primary"><FaChartPie className="mr-2 text-blue-600" /> Category Distribution</div>}
+              title={<div className="flex items-center justify-center py-2 sm:py-4 font-bold text-theme-primary text-sm sm:text-base"><FaChartPie className="mr-2 text-blue-600" /> Category Distribution</div>}
             />
           </div>
         </div>
@@ -404,7 +404,7 @@ export const Reports = () => {
                 name: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][idx],
                 y: val
               }))}
-              title={<div className="flex items-center justify-center py-4 font-bold text-theme-primary"><FaChartLine className="mr-2 text-green-600" /> Monthly Circulation Trends (Donut)</div>}
+              title={<div className="flex items-center justify-center py-2 sm:py-4 font-bold text-theme-primary text-sm sm:text-base"><FaChartLine className="mr-2 text-green-600" /> Monthly Circulation Trends (Donut)</div>}
             />
           </div>
         </div>
@@ -417,7 +417,7 @@ export const Reports = () => {
             <ComboChart
               barData={[456, 389, 234, 156, 89, 123]}
               lineData={[15.2, 12.8, 18.5, 22.1, 8.9, 25.3]}
-              title={<div className="flex items-center justify-center py-4 font-bold text-theme-primary"><FaChartBar className="mr-2 text-purple-600" /> Issues vs Growth Rate - Dual Axis Analysis</div>}
+              title={<div className="flex items-center justify-center py-2 sm:py-4 font-bold text-theme-primary text-sm sm:text-base"><FaChartBar className="mr-2 text-purple-600" /> Issues vs Growth Rate - Dual Axis Analysis</div>}
               labels={['Fiction', 'Academic', 'Science', 'History', 'Others', 'Digital']}
             />
           </div>

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { FaUserGraduate, FaPlus, FaEdit, FaTrash, FaSearch, FaUser, FaEnvelope, FaGraduationCap, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { toast } from 'react-toastify';
+import { Tooltip } from 'react-tooltip';
 
 const Students = () => {
   const [students, setStudents] = useState([
@@ -39,13 +40,17 @@ const Students = () => {
   };
 
   return (
-    <div className="p-6">
-      <div className="flex justify-between items-center mb-6">
+    <div className="p-3 sm:p-4 lg:p-6">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 sm:mb-6 gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">Students Management</h1>
-          <p className="text-gray-600">Manage student records and academic library access</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-2">Students Management</h1>
+          <p className="text-sm sm:text-base text-gray-600">Manage student records and academic library access</p>
         </div>
-        <button className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg flex items-center cursor-pointer">
+        <button 
+          className="bg-purple-600 hover:bg-purple-700 text-white px-3 sm:px-4 py-2 rounded-lg flex items-center cursor-pointer text-sm sm:text-base"
+          data-tooltip-id="add-student-tooltip"
+          data-tooltip-content="Add new student to system"
+        >
           <FaPlus className="mr-2" />
           Add New Student
         </button>
@@ -54,7 +59,11 @@ const Students = () => {
       <div className="bg-white rounded-xl shadow-lg border border-gray-100">
         <div className="p-6 border-b border-gray-200">
           <div className="relative">
-            <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+            <FaSearch 
+              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" 
+              data-tooltip-id="search-students-tooltip"
+              data-tooltip-content="Search by name, email, roll number or class"
+            />
             <input
               type="text"
               placeholder="Search students by name, email, roll number, or class..."
@@ -69,12 +78,12 @@ const Students = () => {
           <table className="w-full">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Student Details</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Roll Number</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Class & Year</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                <th className="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Student Details</th>
+                <th className="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden lg:table-cell">Roll Number</th>
+                <th className="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">Class & Year</th>
+                <th className="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden lg:table-cell">Email</th>
+                <th className="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                <th className="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
@@ -117,12 +126,18 @@ const Students = () => {
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                    <button className="text-blue-600 hover:text-blue-900 mr-3 cursor-pointer">
+                    <button 
+                      className="text-blue-600 hover:text-blue-900 mr-3 cursor-pointer"
+                      data-tooltip-id="edit-student-tooltip"
+                      data-tooltip-content="Edit student details"
+                    >
                       <FaEdit />
                     </button>
                     <button 
                       onClick={() => handleDeleteStudent(student.id)}
                       className="text-red-600 hover:text-red-900 cursor-pointer"
+                      data-tooltip-id="delete-student-tooltip"
+                      data-tooltip-content="Delete student record"
                     >
                       <FaTrash />
                     </button>
@@ -173,6 +188,11 @@ const Students = () => {
           </div>
         )}
       </div>
+      {/* Tooltips */}
+      <Tooltip id="add-student-tooltip" place="top" style={{ backgroundColor: '#7C3AED', color: 'white', fontSize: '11px', padding: '4px 8px', borderRadius: '4px' }} />
+      <Tooltip id="search-students-tooltip" place="top" style={{ backgroundColor: '#374151', color: 'white', fontSize: '11px', padding: '4px 8px', borderRadius: '4px' }} />
+      <Tooltip id="edit-student-tooltip" place="top" style={{ backgroundColor: '#2563EB', color: 'white', fontSize: '11px', padding: '4px 8px', borderRadius: '4px' }} />
+      <Tooltip id="delete-student-tooltip" place="top" style={{ backgroundColor: '#DC2626', color: 'white', fontSize: '11px', padding: '4px 8px', borderRadius: '4px' }} />
     </div>
   );
 };

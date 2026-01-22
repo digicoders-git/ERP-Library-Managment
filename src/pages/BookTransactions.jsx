@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { FaPlus, FaSearch, FaBook, FaUser, FaCalendar, FaCheck, FaTimes, FaUndo, FaFilter } from 'react-icons/fa';
 import { toast } from 'react-toastify';
+import { Tooltip } from 'react-tooltip';
 
 const BookTransactions = () => {
   const [books] = useState([
@@ -165,15 +166,17 @@ const BookTransactions = () => {
   };
 
   return (
-    <div className="p-6">
-      <div className="flex justify-between items-center mb-6">
+    <div className="p-3 sm:p-4 lg:p-6">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 sm:mb-6 gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">Book Transactions</h1>
-          <p className="text-gray-600">Track book issues, returns, and manage library transactions</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-2">Book Transactions</h1>
+          <p className="text-sm sm:text-base text-gray-600">Track book issues, returns, and manage library transactions</p>
         </div>
         <button 
           onClick={() => setShowIssueModal(true)}
-          className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg flex items-center cursor-pointer"
+          className="bg-green-600 hover:bg-green-700 text-white px-3 sm:px-4 py-2 rounded-lg flex items-center cursor-pointer text-sm sm:text-base"
+          data-tooltip-id="issue-book-tooltip"
+          data-tooltip-content="Issue book to member"
         >
           <FaPlus className="mr-2" />
           Issue Book
@@ -181,15 +184,15 @@ const BookTransactions = () => {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-        <div className="bg-white p-4 rounded-lg shadow border">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-4 sm:mb-6">
+        <div className="bg-white p-3 sm:p-4 rounded-lg shadow border">
           <div className="flex items-center">
             <div className="p-2 bg-blue-100 rounded-lg">
-              <FaBook className="text-blue-600" />
+              <FaBook className="text-blue-600 text-sm sm:text-base" />
             </div>
-            <div className="ml-3">
-              <p className="text-sm text-gray-600">Total Issued</p>
-              <p className="text-xl font-bold text-gray-800">
+            <div className="ml-2 sm:ml-3">
+              <p className="text-xs sm:text-sm text-gray-600">Total Issued</p>
+              <p className="text-lg sm:text-xl font-bold text-gray-800">
                 {transactions.filter(t => t.status === 'Issued').length}
               </p>
             </div>
@@ -243,7 +246,11 @@ const BookTransactions = () => {
         <div className="p-6 border-b border-gray-200">
           <div className="flex flex-col md:flex-row gap-4">
             <div className="relative flex-1">
-              <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+              <FaSearch 
+                className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" 
+                data-tooltip-id="search-transactions-tooltip"
+                data-tooltip-content="Search by book, member name or ID"
+              />
               <input
                 type="text"
                 placeholder="Search by book title, member name, or member ID..."
@@ -253,7 +260,11 @@ const BookTransactions = () => {
               />
             </div>
             <div className="relative">
-              <FaFilter className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+              <FaFilter 
+                className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" 
+                data-tooltip-id="filter-status-tooltip"
+                data-tooltip-content="Filter by transaction status"
+              />
               <select
                 value={filterStatus}
                 onChange={(e) => setFilterStatus(e.target.value)}
@@ -342,6 +353,8 @@ const BookTransactions = () => {
                             setShowReturnModal(true);
                           }}
                           className="text-green-600 hover:text-green-900 mr-3"
+                          data-tooltip-id="return-book-tooltip"
+                          data-tooltip-content="Return this book"
                         >
                           <FaUndo />
                         </button>
@@ -483,6 +496,11 @@ const BookTransactions = () => {
           </div>
         </div>
       )}
+      {/* Tooltips */}
+      <Tooltip id="issue-book-tooltip" place="top" style={{ backgroundColor: '#059669', color: 'white', fontSize: '11px', padding: '4px 8px', borderRadius: '4px' }} />
+      <Tooltip id="search-transactions-tooltip" place="top" style={{ backgroundColor: '#374151', color: 'white', fontSize: '11px', padding: '4px 8px', borderRadius: '4px' }} />
+      <Tooltip id="filter-status-tooltip" place="top" style={{ backgroundColor: '#6B7280', color: 'white', fontSize: '11px', padding: '4px 8px', borderRadius: '4px' }} />
+      <Tooltip id="return-book-tooltip" place="top" style={{ backgroundColor: '#059669', color: 'white', fontSize: '11px', padding: '4px 8px', borderRadius: '4px' }} />
     </div>
   );
 };

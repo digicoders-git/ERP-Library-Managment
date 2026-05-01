@@ -40,7 +40,6 @@ const Sidebar = ({ activeItem, isCollapsed, setIsCollapsed }) => {
       items: [
         { id: 'students', label: 'Students', icon: FaUserGraduate, path: '/dashboard/students' },
         { id: 'members', label: 'Members', icon: FaUsers, path: '/dashboard/members' },
-        { id: 'library-cards', label: 'Library Cards', icon: FaIdCard, path: '/dashboard/library-cards' },
       ]
     },
     {
@@ -158,6 +157,14 @@ const Sidebar = ({ activeItem, isCollapsed, setIsCollapsed }) => {
         >
           <FaKey className={`${isCollapsed ? 'text-lg' : 'text-lg'}`} />
           {!isCollapsed && <span className="ml-3">Change Password</span>}
+        </button>
+        <button
+          onClick={() => navigate('/dashboard/my-attendance')}
+          className="w-full flex items-center p-3 rounded-lg hover:bg-gray-800 cursor-pointer text-gray-300 transition"
+          title={isCollapsed ? 'My Attendance' : ''}
+        >
+          <FaClipboardList className={`${isCollapsed ? 'text-lg' : 'text-lg'}`} />
+          {!isCollapsed && <span className="ml-3">My Attendance</span>}
         </button>
         <button
           onClick={handleLogout}

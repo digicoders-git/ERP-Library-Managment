@@ -54,12 +54,14 @@ export default function BookRequests() {
   };
 
   const getStatusBadge = (status) => {
+    const s = status?.toLowerCase();
     const colors = {
       pending: 'bg-yellow-100 text-yellow-800',
       approved: 'bg-green-100 text-green-800',
-      rejected: 'bg-red-100 text-red-800'
+      rejected: 'bg-red-100 text-red-800',
+      fulfilled: 'bg-blue-100 text-blue-800'
     };
-    return colors[status] || 'bg-gray-100 text-gray-800';
+    return colors[s] || 'bg-gray-100 text-gray-800';
   };
 
   if (loading) {
@@ -77,25 +79,25 @@ export default function BookRequests() {
         <div className="flex gap-2">
           <button
             onClick={() => setFilter('all')}
-            className={`px-4 py-2 rounded-lg ${filter === 'all' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}
+            className={`px-4 py-2 rounded-lg transition-colors ${filter === 'all' ? 'bg-blue-600 text-white' : 'bg-gray-200 hover:bg-gray-300'}`}
           >
             All
           </button>
           <button
-            onClick={() => setFilter('pending')}
-            className={`px-4 py-2 rounded-lg ${filter === 'pending' ? 'bg-yellow-600 text-white' : 'bg-gray-200'}`}
+            onClick={() => setFilter('Pending')}
+            className={`px-4 py-2 rounded-lg transition-colors ${filter === 'Pending' ? 'bg-yellow-600 text-white' : 'bg-gray-200 hover:bg-gray-300'}`}
           >
             Pending
           </button>
           <button
-            onClick={() => setFilter('approved')}
-            className={`px-4 py-2 rounded-lg ${filter === 'approved' ? 'bg-green-600 text-white' : 'bg-gray-200'}`}
+            onClick={() => setFilter('Approved')}
+            className={`px-4 py-2 rounded-lg transition-colors ${filter === 'Approved' ? 'bg-green-600 text-white' : 'bg-gray-200 hover:bg-gray-300'}`}
           >
             Approved
           </button>
           <button
-            onClick={() => setFilter('rejected')}
-            className={`px-4 py-2 rounded-lg ${filter === 'rejected' ? 'bg-red-600 text-white' : 'bg-gray-200'}`}
+            onClick={() => setFilter('Rejected')}
+            className={`px-4 py-2 rounded-lg transition-colors ${filter === 'Rejected' ? 'bg-red-600 text-white' : 'bg-gray-200 hover:bg-gray-300'}`}
           >
             Rejected
           </button>
@@ -106,63 +108,67 @@ export default function BookRequests() {
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Request ID</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Student/Member</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Book Title</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Author</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Request Date</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Request ID</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Student/Member</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Book Title</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Author</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Request Date</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
             {requests.length === 0 ? (
               <tr>
-                <td colSpan="7" className="px-6 py-4 text-center text-gray-500">
+                <td colSpan="7" className="px-6 py-10 text-center text-gray-500">
                   No book requests found
                 </td>
               </tr>
             ) : (
               requests.map((request) => (
-                <tr key={request._id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap text-sm">{request.requestId}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm font-medium text-gray-900">{request.studentName || request.memberName}</div>
-                    <div className="text-sm text-gray-500">{request.studentId || request.memberId}</div>
+                <tr key={request._id} className="hover:bg-gray-50 transition-colors">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-600">
+                    {request.requestId || `#${request._id.slice(-6).toUpperCase()}`}
                   </td>
-                  <td className="px-6 py-4 text-sm">{request.bookTitle}</td>
-                  <td className="px-6 py-4 text-sm">{request.author}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm">
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="text-sm font-bold text-gray-900">{request.studentName || request.memberName}</div>
+                    <div className="text-[10px] text-gray-500 font-mono uppercase">{request.studentId || request.memberId}</div>
+                  </td>
+                  <td className="px-6 py-4 text-sm font-medium text-gray-800">{request.bookTitle}</td>
+                  <td className="px-6 py-4 text-sm text-gray-600">{request.author || 'N/A'}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
                     {new Date(request.requestDate).toLocaleDateString()}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`px-2 py-1 text-xs rounded-full ${getStatusBadge(request.status)}`}>
+                    <span className={`px-3 py-1 text-[10px] font-bold uppercase rounded-full border ${getStatusBadge(request.status)}`}>
                       {request.status}
                     </span>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm">
-                    {request.status === 'pending' && (
-                      <div className="flex gap-2">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                    {request.status?.toLowerCase() === 'pending' && (
+                      <div className="flex gap-3">
                         <button
                           onClick={() => handleApprove(request._id)}
-                          className="text-green-600 hover:text-green-900"
+                          className="text-green-600 hover:text-green-800 bg-green-50 px-2 py-1 rounded"
                         >
                           Approve
                         </button>
                         <button
                           onClick={() => handleReject(request._id)}
-                          className="text-red-600 hover:text-red-900"
+                          className="text-red-600 hover:text-red-800 bg-red-50 px-2 py-1 rounded"
                         >
                           Reject
                         </button>
                       </div>
                     )}
-                    <button
-                      onClick={() => handleDelete(request._id)}
-                      className="text-red-600 hover:text-red-900 ml-2"
-                    >
-                      Delete
-                    </button>
+                    {request.status?.toLowerCase() !== 'pending' && (
+                       <button
+                       onClick={() => handleDelete(request._id)}
+                       className="text-gray-400 hover:text-red-600 transition-colors"
+                     >
+                       Delete
+                     </button>
+                    )}
                   </td>
                 </tr>
               ))

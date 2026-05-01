@@ -51,13 +51,13 @@ const BookTransactions = () => {
   };
 
   const filteredTransactions = transactions.filter(transaction => {
-    const matchesSearch = 
+    const matchesSearch =
       transaction.bookTitle?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       transaction.memberName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       transaction.memberId?.toLowerCase().includes(searchTerm.toLowerCase());
-    
+
     const matchesFilter = filterStatus === 'All' || transaction.status === filterStatus;
-    
+
     return matchesSearch && matchesFilter;
   });
 
@@ -91,7 +91,7 @@ const BookTransactions = () => {
 
   const handleIssueBook = async (e) => {
     e.preventDefault();
-    
+
     if (!issueForm.bookId || !issueForm.memberId || !issueForm.dueDate) {
       toast.error('Please fill all required fields');
       return;
@@ -143,7 +143,7 @@ const BookTransactions = () => {
 
   const getOverdueTransactions = () => {
     const today = new Date();
-    return transactions.filter(t => 
+    return transactions.filter(t =>
       t.status === 'issued' && new Date(t.dueDate) < today
     );
   };
@@ -173,7 +173,7 @@ const BookTransactions = () => {
           <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-2">Book Transactions</h1>
           <p className="text-sm sm:text-base text-gray-600">Track book issues, returns, and manage library transactions</p>
         </div>
-        <button 
+        <button
           onClick={() => setShowIssueModal(true)}
           disabled={submitting}
           className="bg-green-600 hover:bg-green-700 text-white px-3 sm:px-4 py-2 rounded-lg flex items-center cursor-pointer text-sm sm:text-base disabled:opacity-50"
@@ -200,7 +200,7 @@ const BookTransactions = () => {
             </div>
           </div>
         </div>
-        
+
         <div className="bg-white p-3 sm:p-4 rounded-lg shadow border">
           <div className="flex items-center">
             <div className="p-2 bg-green-100 rounded-lg">
@@ -214,7 +214,7 @@ const BookTransactions = () => {
             </div>
           </div>
         </div>
-        
+
         <div className="bg-white p-3 sm:p-4 rounded-lg shadow border">
           <div className="flex items-center">
             <div className="p-2 bg-red-100 rounded-lg">
@@ -228,7 +228,7 @@ const BookTransactions = () => {
             </div>
           </div>
         </div>
-        
+
         <div className="bg-white p-3 sm:p-4 rounded-lg shadow border">
           <div className="flex items-center">
             <div className="p-2 bg-yellow-100 rounded-lg">
@@ -248,8 +248,8 @@ const BookTransactions = () => {
         <div className="p-6 border-b border-gray-200">
           <div className="flex flex-col md:flex-row gap-4">
             <div className="relative flex-1">
-              <FaSearch 
-                className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" 
+              <FaSearch
+                className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
                 data-tooltip-id="search-transactions-tooltip"
                 data-tooltip-content="Search by book, member name or ID"
               />
@@ -262,8 +262,8 @@ const BookTransactions = () => {
               />
             </div>
             <div className="relative">
-              <FaFilter 
-                className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" 
+              <FaFilter
+                className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
                 data-tooltip-id="filter-status-tooltip"
                 data-tooltip-content="Filter by transaction status"
               />
@@ -336,11 +336,10 @@ const BookTransactions = () => {
                       {transaction.returnDate || '-'}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                        transaction.status === 'issued' 
+                      <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${transaction.status === 'issued'
                           ? isTransactionOverdue ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800'
                           : getStatusColor(transaction.status)
-                      }`}>
+                        }`}>
                         {getDisplayStatus(transaction)}
                       </span>
                     </td>
@@ -349,7 +348,7 @@ const BookTransactions = () => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                       {transaction.status === 'issued' && (
-                        <button 
+                        <button
                           onClick={() => {
                             setSelectedTransaction(transaction);
                             setShowReturnModal(true);
@@ -384,7 +383,7 @@ const BookTransactions = () => {
             <div className="p-6 border-b border-gray-200">
               <div className="flex justify-between items-center">
                 <h2 className="text-xl font-bold text-gray-800">Issue Book</h2>
-                <button 
+                <button
                   onClick={() => setShowIssueModal(false)}
                   className="text-gray-400 hover:text-gray-600 cursor-pointer"
                   title="Close modal"
@@ -398,7 +397,7 @@ const BookTransactions = () => {
                 <label className="block text-sm font-medium text-gray-700 mb-2">Member Type</label>
                 <select
                   value={issueForm.memberType}
-                  onChange={(e) => setIssueForm({...issueForm, memberType: e.target.value, memberId: ''})}
+                  onChange={(e) => setIssueForm({ ...issueForm, memberType: e.target.value, memberId: '' })}
                   className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="LibraryMember">Library Member</option>
@@ -409,7 +408,7 @@ const BookTransactions = () => {
                 <label className="block text-sm font-medium text-gray-700 mb-2">Select Book</label>
                 <select
                   value={issueForm.bookId}
-                  onChange={(e) => setIssueForm({...issueForm, bookId: e.target.value})}
+                  onChange={(e) => setIssueForm({ ...issueForm, bookId: e.target.value })}
                   className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   required
                 >
@@ -425,22 +424,22 @@ const BookTransactions = () => {
                 <label className="block text-sm font-medium text-gray-700 mb-2">Select {issueForm.memberType === 'Student' ? 'Student' : 'Member'}</label>
                 <select
                   value={issueForm.memberId}
-                  onChange={(e) => setIssueForm({...issueForm, memberId: e.target.value})}
+                  onChange={(e) => setIssueForm({ ...issueForm, memberId: e.target.value })}
                   className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   required
                 >
                   <option value="">Choose a {issueForm.memberType === 'Student' ? 'student' : 'member'}...</option>
-                  {issueForm.memberType === 'Student' 
+                  {issueForm.memberType === 'Student'
                     ? students.map(student => (
-                        <option key={student._id} value={student._id}>
-                          {student.firstName} {student.lastName} ({student.admissionNumber || student.rollNumber})
-                        </option>
-                      ))
+                      <option key={student._id} value={student._id}>
+                        {student.firstName} {student.lastName} ({student.admissionNumber || student.rollNumber})
+                      </option>
+                    ))
                     : members.map(member => (
-                        <option key={member._id} value={member._id}>
-                          {member.name} ({member.memberId})
-                        </option>
-                      ))
+                      <option key={member._id} value={member._id}>
+                        {member.name} ({member.memberId})
+                      </option>
+                    ))
                   }
                 </select>
               </div>
@@ -449,7 +448,7 @@ const BookTransactions = () => {
                 <input
                   type="date"
                   value={issueForm.dueDate}
-                  onChange={(e) => setIssueForm({...issueForm, dueDate: e.target.value})}
+                  onChange={(e) => setIssueForm({ ...issueForm, dueDate: e.target.value })}
                   className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   min={new Date().toISOString().split('T')[0]}
                   required
@@ -485,7 +484,7 @@ const BookTransactions = () => {
             <div className="p-6 border-b border-gray-200">
               <div className="flex justify-between items-center">
                 <h2 className="text-xl font-bold text-gray-800">Return Book</h2>
-                <button 
+                <button
                   onClick={() => setShowReturnModal(false)}
                   className="text-gray-400 hover:text-gray-600 cursor-pointer"
                   title="Close modal"

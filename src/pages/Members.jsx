@@ -1,23 +1,32 @@
 import { useState, useEffect } from 'react';
-import { FaUsers, FaPlus, FaEdit, FaTrash, FaSearch, FaUser, FaEnvelope, FaPhone, FaChevronLeft, FaChevronRight, FaTimes, FaCheck } from 'react-icons/fa';
+import { FaUsers, FaPlus, FaEdit, FaTrash, FaSearch, FaUser, FaEnvelope, FaPhone, FaChevronLeft, FaChevronRight, FaTimes, FaCheck, FaIdCard, FaSpinner } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 import Swal from 'sweetalert2';
 import { Tooltip } from 'react-tooltip';
-import { memberAPI } from '../services/api';
-
+import Select from 'react-select';
+import { memberAPI, authAPI, studentAPI } from '../services/api';
+import MembershipCardPreview from '../components/MembershipCardPreview';
 const Members = () => {
   const [members, setMembers] = useState([]);
+  const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [editingId, setEditingId] = useState(null);
+  const [selectedMemberForCard, setSelectedMemberForCard] = useState(null);
   const [userInfo, setUserInfo] = useState(null);
+  const [branchName, setBranchName] = useState("");
+  const [schoolLogo, setSchoolLogo] = useState("");
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     phone: '',
-    address: '',
+    memberId: '',
     memberType: 'General',
-    status: 'Active'
+    address: '',
+    studentId: '',
+    joiningDate: new Date().toISOString().split('T')[0],
+    validTill: '',
+    status: true
   });
 
   const [searchTerm, setSearchTerm] = useState('');
@@ -28,7 +37,35 @@ const Members = () => {
     const user = JSON.parse(localStorage.getItem('user') || '{}');
     setUserInfo(user);
     fetchMembers();
+    fetchProfile();
+    fetchStudents();
   }, []);
+
+  const fetchStudents = async () => {
+    try {
+      const { data } = await studentAPI.getAll();
+      setStudents(data.data || []);
+    } catch (error) {
+      console.error('Failed to fetch students', error);
+    }
+  };
+
+  const fetchProfile = async () => {
+    try {
+      const { data } = await authAPI.getProfile();
+      const profileData = data.data?.librarian;
+      if (profileData) {
+        if (profileData.branch) {
+          setBranchName(profileData.branch.branchName || "");
+        }
+        if (profileData.logo) {
+          setSchoolLogo(profileData.logo);
+        }
+      }
+    } catch (error) {
+      console.error('Failed to fetch profile', error);
+    }
+  };
 
   const fetchMembers = async () => {
     setLoading(true);
@@ -71,9 +108,13 @@ const Members = () => {
       name: '',
       email: '',
       phone: '',
-      address: '',
+      memberId: '',
       memberType: 'General',
-      status: 'Active'
+      address: '',
+      studentId: '',
+      joiningDate: new Date().toISOString().split('T')[0],
+      validTill: '',
+      status: true
     });
     setShowModal(true);
   };
@@ -81,44 +122,37 @@ const Members = () => {
   const handleEditMember = (member) => {
     setEditingId(member._id);
     setFormData({
-      name: member.name || '',
-      email: member.email || '',
+      name: member.name,
+      email: member.email,
       phone: member.phone || '',
+      memberId: member.id,
+      memberType: member.memberType,
       address: member.address || '',
-      memberType: member.memberType || 'General',
-      status: member.status || 'Active'
+      studentId: member.studentId || '',
+      joiningDate: member.joinDate || new Date().toISOString().split('T')[0],
+      validTill: member.validTill === 'Lifetime' ? '' : member.validTill,
+      status: member.status === 'Active'
     });
     setShowModal(true);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.name || !formData.email) {
-      toast.error('Please fill all required fields');
-      return;
-    }
-
-    const dataToSubmit = {
-      ...formData,
-      branch: userInfo?.branch || userInfo?.branchId,
-      school: userInfo?.school || userInfo?.schoolId,
-      branchName: userInfo?.branchName,
-      schoolName: userInfo?.schoolName
-    };
-
     setLoading(true);
     try {
       if (editingId) {
-        await memberAPI.update(editingId, dataToSubmit);
+        await memberAPI.update(editingId, formData);
         toast.success('Member updated successfully');
       } else {
-        await memberAPI.create(dataToSubmit);
-        toast.success('Member added successfully to your branch');
+        await memberAPI.add(formData);
+        toast.success('Member added successfully');
       }
       setShowModal(false);
+      setEditingId(null);
+      setFormData({ name: '', email: '', phone: '', memberId: '', memberType: 'General', address: '', studentId: '' });
       fetchMembers();
     } catch (error) {
-      toast.error(error.response?.data?.message || 'Operation failed');
+      toast.error(error.response?.data?.message || 'Failed to save member');
     } finally {
       setLoading(false);
     }
@@ -126,6 +160,13 @@ const Members = () => {
 
   const handleDeleteMember = (memberId) => {
     const member = members.find(m => m._id === memberId);
+    
+    // Prevent deleting auto-synced students
+    if (member && member.memberType === 'Student') {
+      toast.error('Student members are synchronized automatically and cannot be deleted manually from the library.');
+      return;
+    }
+
     Swal.fire({
       title: 'Are you sure?',
       text: `Delete member "${member.name}"?`,
@@ -237,6 +278,14 @@ const Members = () => {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                     <button 
+                      onClick={() => setSelectedMemberForCard(member)}
+                      className="text-purple-600 hover:text-purple-900 mr-3 cursor-pointer"
+                      data-tooltip-id="card-member-tooltip"
+                      data-tooltip-content="View Library Card"
+                    >
+                      <FaIdCard />
+                    </button>
+                    <button 
                       onClick={() => handleEditMember(member)}
                       className="text-blue-600 hover:text-blue-900 mr-3 cursor-pointer"
                       data-tooltip-id="edit-member-tooltip"
@@ -246,9 +295,9 @@ const Members = () => {
                     </button>
                     <button 
                       onClick={() => handleDeleteMember(member._id)}
-                      className="text-red-600 hover:text-red-900 cursor-pointer"
+                      className={`${member.memberType === 'Student' ? 'text-gray-400 cursor-not-allowed' : 'text-red-600 hover:text-red-900 cursor-pointer'}`}
                       data-tooltip-id="delete-member-tooltip"
-                      data-tooltip-content="Delete member account"
+                      data-tooltip-content={member.memberType === 'Student' ? 'Cannot delete synced students' : 'Delete member account'}
                     >
                       <FaTrash />
                     </button>
@@ -312,16 +361,9 @@ const Members = () => {
           <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
             <div className="p-6 border-b border-gray-200 sticky top-0 bg-white">
               <div className="flex justify-between items-center">
-                <div>
-                  <h2 className="text-2xl font-bold text-gray-800">
+                <h2 className="text-2xl font-bold text-gray-800">
                     {editingId ? 'Edit Member' : 'Add New Member'}
-                  </h2>
-                  {userInfo && (
-                    <p className="text-xs text-gray-500 mt-1">
-                      Adding to: {userInfo.branchName || userInfo.branch} - {userInfo.schoolName || userInfo.school}
-                    </p>
-                  )}
-                </div>
+                </h2>
                 <button 
                   onClick={() => setShowModal(false)}
                   className="text-gray-400 hover:text-gray-600 cursor-pointer"
@@ -332,110 +374,162 @@ const Members = () => {
             </div>
             
             <form onSubmit={handleSubmit} className="p-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Member Name *</label>
-                  <input
-                    type="text"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-                    placeholder="Enter member name"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Email *</label>
-                  <input
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-                    placeholder="member@example.com"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Phone</label>
-                  <input
-                    type="tel"
-                    name="phone"
-                    value={formData.phone}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-                    placeholder="Enter phone number"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Member Type</label>
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Member Type</label>
                   <select
                     name="memberType"
                     value={formData.memberType}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                    onChange={(e) => {
+                      const type = e.target.value;
+                      setFormData(prev => ({
+                        ...prev,
+                        memberType: type,
+                        studentId: ''
+                      }));
+                    }}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   >
                     <option value="General">General</option>
                     <option value="Staff">Staff</option>
                     <option value="Faculty">Faculty</option>
                     <option value="Alumni">Alumni</option>
+                    <option value="Student">Student</option>
                   </select>
                 </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Status</label>
-                  <select
-                    name="status"
-                    value={formData.status}
+                {formData.memberType === 'Student' && (
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Select Student *</label>
+                    <Select
+                      options={students.map(s => ({
+                        value: s._id,
+                        label: `${s.firstName} ${s.lastName} (${s.admissionNumber || s.rollNumber})`,
+                        student: s
+                      }))}
+                      onChange={(selected) => {
+                        if (selected) {
+                          const s = selected.student;
+                          setFormData(prev => ({
+                            ...prev,
+                            studentId: s._id,
+                            name: `${s.firstName} ${s.lastName}`,
+                            email: s.email,
+                            phone: s.phone || '',
+                            memberId: s.admissionNumber || s.rollNumber || ''
+                          }));
+                        }
+                      }}
+                      placeholder="Search students..."
+                      className="text-sm"
+                      isSearchable
+                      isLoading={loading}
+                    />
+                  </div>
+                )}
+
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Full Name *</label>
+                  <input
+                    type="text"
+                    name="name"
+                    value={formData.name}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-                  >
-                    <option value="Active">Active</option>
-                    <option value="Inactive">Inactive</option>
-                  </select>
+                    placeholder="Enter full name"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    required
+                  />
                 </div>
-
-                <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Address</label>
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Email Address *</label>
+                  <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    placeholder="Enter email address"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    required
+                  />
+                </div>
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
+                  <input
+                    type="text"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleInputChange}
+                    placeholder="Enter phone number"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Member ID / Roll No</label>
+                  <input
+                    type="text"
+                    name="memberId"
+                    value={formData.memberId}
+                    onChange={handleInputChange}
+                    placeholder="e.g., LIB-001 or Roll No"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Address</label>
                   <textarea
                     name="address"
                     value={formData.address}
                     onChange={handleInputChange}
-                    rows="3"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-                    placeholder="Enter full address"
+                    placeholder="Enter address"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    rows="2"
                   ></textarea>
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Valid Till</label>
+                  <input
+                    type="date"
+                    name="validTill"
+                    value={formData.validTill}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">Leave blank for Lifetime membership</p>
+                </div>
+
+                <div className="mb-4 flex items-center gap-3">
+                  <label className="text-sm font-medium text-gray-700">Membership Status:</label>
+                  <button
+                    type="button"
+                    onClick={() => setFormData(prev => ({ ...prev, status: !prev.status }))}
+                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${formData.status ? 'bg-green-600' : 'bg-gray-300'}`}
+                  >
+                    <span
+                      className={`${formData.status ? 'translate-x-6' : 'translate-x-1'} inline-block h-4 w-4 transform rounded-full bg-white transition-transform`}
+                    />
+                  </button>
+                  <span className={`text-sm font-bold ${formData.status ? 'text-green-600' : 'text-gray-500'}`}>
+                    {formData.status ? 'Active' : 'Inactive'}
+                  </span>
                 </div>
               </div>
-
-              <div className="flex justify-end gap-3 mt-6">
+              <div className="p-6 border-t border-gray-200 flex justify-end gap-3">
                 <button
                   type="button"
-                  onClick={() => setShowModal(false)}
-                  className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition"
+                  onClick={() => {
+                    setShowModal(false);
+                    setEditingId(null);
+                    setFormData({ name: '', email: '', phone: '', memberId: '', memberType: 'General', address: '', studentId: '' });
+                  }}
+                  className="px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={loading}
-                  className="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition disabled:opacity-50 flex items-center gap-2"
+                  className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center gap-2"
                 >
-                  {loading ? (
-                    <>
-                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                      Processing...
-                    </>
-                  ) : (
-                    <>
-                      <FaCheck />
-                      {editingId ? 'Update Member' : 'Add Member'}
-                    </>
-                  )}
+                  {loading && editingId === null ? <FaSpinner className="animate-spin" /> : <FaCheck />}
+                  {editingId ? 'Update Member' : 'Add Member'}
                 </button>
               </div>
             </form>
@@ -446,8 +540,19 @@ const Members = () => {
       {/* Tooltips */}
       <Tooltip id="add-member-tooltip" place="top" style={{ backgroundColor: '#059669', color: 'white', fontSize: '11px', padding: '4px 8px', borderRadius: '4px' }} />
       <Tooltip id="search-members-tooltip" place="top" style={{ backgroundColor: '#374151', color: 'white', fontSize: '11px', padding: '4px 8px', borderRadius: '4px' }} />
+      <Tooltip id="card-member-tooltip" place="top" style={{ backgroundColor: '#9333EA', color: 'white', fontSize: '11px', padding: '4px 8px', borderRadius: '4px' }} />
       <Tooltip id="edit-member-tooltip" place="top" style={{ backgroundColor: '#2563EB', color: 'white', fontSize: '11px', padding: '4px 8px', borderRadius: '4px' }} />
       <Tooltip id="delete-member-tooltip" place="top" style={{ backgroundColor: '#DC2626', color: 'white', fontSize: '11px', padding: '4px 8px', borderRadius: '4px' }} />
+
+      {/* Membership Card Modal */}
+      {selectedMemberForCard && (
+        <MembershipCardPreview 
+          member={selectedMemberForCard} 
+          libraryName={branchName || userInfo?.schoolName || userInfo?.branchName || "Library Management"}
+          logo={schoolLogo}
+          onClose={() => setSelectedMemberForCard(null)} 
+        />
+      )}
     </div>
   );
 };

@@ -39,9 +39,9 @@ const Dashboard = () => {
         const data = response.data.data;
         setStats([
           { title: 'Total Books', value: data.totalBooks.toString(), icon: FaBook, color: 'bg-blue-500', change: '+12%', trend: 'up', description: `Available: ${data.availableBooks}` },
-          { title: 'Active Members', value: data.totalMembers.toString(), icon: FaUsers, color: 'bg-green-500', change: '+8%', trend: 'up', description: 'Active members' },
-          { title: 'Students', value: data.totalStudents.toString(), icon: FaUserGraduate, color: 'bg-purple-500', change: '+5%', trend: 'up', description: 'Registered students' },
           { title: 'Books Issued', value: data.issuedBooks.toString(), icon: FaClipboardList, color: 'bg-orange-500', change: '-3%', trend: 'down', description: `Overdue: ${data.overdueBooks}` },
+          { title: 'Pending Requests', value: (data.pendingRequests || 0).toString(), icon: FaBell, color: 'bg-amber-500', change: 'New', trend: 'up', description: 'Student requests' },
+          { title: 'Active Members', value: (data.totalMembers + data.totalStudents).toString(), icon: FaUsers, color: 'bg-green-500', change: '+8%', trend: 'up', description: 'Total library users' },
         ]);
         setTodayStats({
           issued: data.todayIssued,

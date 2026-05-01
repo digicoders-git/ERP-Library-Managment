@@ -18,8 +18,8 @@ import BookCategorization from './components/BookCategorization';
 import BookIssueTracking from './components/BookIssueTracking';
 import DigitalLibrary from './components/DigitalLibrary';
 import DueDateAlerts from './components/DueDateAlerts';
-import LibraryCardManagement from './components/LibraryCardManagement';
 import BookLimitManagement from './components/BookLimitManagement';
+import MyAttendance from './components/MyAttendance';
 import { useState, useEffect } from 'react';
 
 function AppContent() {
@@ -76,13 +76,13 @@ function AppContent() {
           <Route path="book-issue" element={<BookIssueTracking />} />
           <Route path="digital-library" element={<DigitalLibrary />} />
           <Route path="due-alerts" element={<DueDateAlerts />} />
-          <Route path="library-cards" element={<LibraryCardManagement />} />
           <Route path="book-limits" element={<BookLimitManagement />} />
           <Route path="book-requests" element={<BookRequests />} />
           <Route path="fine-management" element={<FineManagement />} />
           <Route path="profile" element={<Profile />} />
           <Route path="settings" element={<Settings />} />
           <Route path="change-password" element={<ChangePassword />} />
+          <Route path="my-attendance" element={<MyAttendance />} />
         </Route>
       </Routes>
       
